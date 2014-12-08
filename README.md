@@ -1,5 +1,6 @@
 StreamCentre Dismantler
+================
 
-[Описание API](goc/API.md)
+[Описание API](doc/API.md)
 
 [Взаимодействие с хранилищем](doc/storage_interaction.md)
