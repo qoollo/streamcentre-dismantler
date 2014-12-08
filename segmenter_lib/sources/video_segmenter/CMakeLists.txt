@@ -1,0 +1,60 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
+SET(projname video_segmenter)
+PROJECT(${projname})
+
+FILE(GLOB_RECURSE headers
+	"src/*.h"
+)
+
+FILE(GLOB_RECURSE sources
+	"src/*.cpp"
+)
+
+SET(directories
+	src
+	src/video_segmenter
+	src/video_segmenter/data_streams
+	src/video_segmenter/ffmpeg
+)
+
+SET(dependencies
+    common
+)
+
+GROUP_FILES("${directories}")
+
+INCLUDE_DIRECTORIES(src)
+
+INCLUDE_DIRECTORIES (
+	${FFMPEG_LIBAVCODEC_INCLUDE_DIRS}
+	${FFMPEG_LIBAVFORMAT_INCLUDE_DIRS}
+	${FFMPEG_LIBSWSCALE_INCLUDE_DIRS}
+#   ${FFMPEG_LIBAVUTIL_INCLUDE_DIRS}
+	${FFMPEG_ROOT}/include
+)
+
+MESSAGE(${FFMPEG_LIBAVCODEC_LIBRARIES})
+MESSAGE(${FFMPEG_LIBAVFORMAT_LIBRARIES})
+
+ADD_LIBRARY(${projname} ${headers} ${sources})
+
+FOREACH(dep ${dependencies})
+    INCLUDE_DIRECTORIES("../${dep}/src")
+ENDFOREACH()
+TARGET_LINK_LIBRARIES(${projname} ${dependencies})
+
+TARGET_LINK_LIBRARIES( ${projname}
+	${FFMPEG_LIBAVCODEC_LIBRARIES}
+	${FFMPEG_LIBAVFORMAT_LIBRARIES}
+	${FFMPEG_LIBAVUTIL_LIBRARIES}
+	${FFMPEG_LIBSWSCALE_LIBRARIES}
+	${FFMPEG_LIBAVDEVICE_LIBRARIES}
+)
+
+FIND_PACKAGE(Boost COMPONENTS iostreams REQUIRED)
+INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
+TARGET_LINK_LIBRARIES(${projname} ${Boost_LIBRARIES})
+
+IF (MSVC)
+	SET_TARGET_PROPERTIES(${projname} PROPERTIES LINK_FLAGS "/SAFESEH:NO")
+ENDIF()

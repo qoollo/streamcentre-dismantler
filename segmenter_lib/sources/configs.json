@@ -1,0 +1,8 @@
+{
+	"segmenter_params": {
+		"fragment_duration_sec": 5,
+		"container_format": "mkv"
+	},
+
+	"storage_url": "127.0.0.1:5000/test_saver"
+}
